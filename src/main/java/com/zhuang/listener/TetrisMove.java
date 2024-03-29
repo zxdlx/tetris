@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 **/
 public class TetrisMove implements ActionListener {
     //游戏初始化对象
-    private TetrisInit tetrisInit;
+    private final TetrisInit tetrisInit;
     //消除沉积方块还是生成下落方块,0消除  1生成
     private int isClear;
     //被删除的y坐标集合
@@ -55,7 +55,7 @@ public class TetrisMove implements ActionListener {
                 }
             }
         }else {
-            if (listY.size()>0) {
+            if (!listY.isEmpty()) {
                 TetrisUtil.sink(tetrisInit.getDeposition(), listY);
             }
             isMove = false;
@@ -72,9 +72,11 @@ public class TetrisMove implements ActionListener {
             tetrisInit.getTetrisNodes().clear();
             tetrisInit.getTimer().setDelay(new Double(Constant.SPEED*(0.2*(6-tetrisInit.getWindowBot().getLevel()))).intValue());
             tetrisInit.getTimer().start();
+            //触碰音效
+            tetrisInit.getMusicPlay().sinkSound();
             //消除方块，并设置下一个动作为消除
             listY = TetrisUtil.clearLine(tetrisInit.getDeposition());
-            if (listY.size() > 0) {
+            if (!listY.isEmpty()) {
                 //添加分数，消除1行10，2行30分，3行60分，4行100分
                 if (listY.size() == 1) {
                     tetrisInit.getWindowBot().addScore(10);
@@ -91,7 +93,7 @@ public class TetrisMove implements ActionListener {
                     if (score >= i * 100 && score < i * 100 + 200) {
                         //如果是这个分数区间，就进来设置等级
                         tetrisInit.getWindowBot().addLevel(i/2+1);
-                        tetrisInit.getTimer().setDelay(new Double(Constant.SPEED*(0.1*i)).intValue());
+                        tetrisInit.getTimer().setDelay(new Double(Constant.SPEED*(0.2*(6-tetrisInit.getWindowBot().getLevel()))).intValue());
                     }
                 }
                 //设置消除行数
@@ -102,7 +104,7 @@ public class TetrisMove implements ActionListener {
                 List<Integer> collect = tetrisInit.getDeposition().stream().map(TetrisNode::getY).collect(Collectors.toList());
                 //如果有小于或等于0的y坐标就是游戏结束
 
-                if (collect.size()>0 && Collections.min(collect) <= 0) {
+                if (!collect.isEmpty() && Collections.min(collect) <= 0) {
                     tetrisInit.getTimer().stop();
                     tetrisInit.setIsStart(false);
                     tetrisInit.getGamePanel().setFail(true);

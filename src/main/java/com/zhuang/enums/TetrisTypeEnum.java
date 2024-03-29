@@ -3,7 +3,6 @@ package com.zhuang.enums;
 /**
  * 方块类型枚举类，用于辨别此时是什么类型的方块
  *
- * @module
  * @author zxd
  * @date 2022/10/26  12:05
 **/

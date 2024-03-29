@@ -80,6 +80,7 @@ public class TetrisKeyListener implements KeyListener {
                 case KeyEvent.VK_UP:
                     //翻转方块
                     TetrisRevolve.revolve(tetrisInit.getTetrisNodes(), tetrisInit);
+                    tetrisInit.getMusicPlay().revolveSound();
                     break;
             }
             tetrisInit.repaint();

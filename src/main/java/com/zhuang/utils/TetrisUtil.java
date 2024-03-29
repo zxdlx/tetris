@@ -1,9 +1,6 @@
 package com.zhuang.utils;
 
 import com.zhuang.constant.Constant;
-import com.zhuang.enums.DirectionEnum;
-import com.zhuang.enums.TetrisTypeEnum;
-import com.zhuang.init.TetrisInit;
 import com.zhuang.tetris.TetrisNode;
 
 import java.util.*;
@@ -12,7 +9,6 @@ import java.util.stream.Collectors;
 /**
  * 工具类
  *
- * @module
  * @author zxd
  * @date 2022/10/27  10:34
 **/
@@ -61,7 +57,6 @@ public class TetrisUtil {
      * @date 2022/10/27 15:37
      * @param deposition 未下沉的沉积方块集合
      * @param clearY 被消除的y坐标集合
-     * @return void
      */
     public static void sink(List<TetrisNode> deposition,List<Integer> clearY){
         //先给y坐标进行排序，让y最大值放第一个，也就是最下行进行判断

@@ -6,6 +6,7 @@ import com.zhuang.constant.Constant;
 import com.zhuang.listener.TetrisKeyListener;
 import com.zhuang.listener.TetrisMove;
 import com.zhuang.tetris.TetrisNode;
+import com.zhuang.utils.MusicPlay;
 import com.zhuang.utils.TetrisType;
 
 import javax.imageio.ImageIO;
@@ -19,23 +20,20 @@ import java.util.List;
 /**
  * 俄罗斯方块初始化类
  *
- * @module
  * @author zxd
  * @date 2022/10/25  9:52
-**/
+ **/
 public class TetrisInit extends JFrame {
     //游戏面板
-    private GamePanel gamePanel;
+    private final GamePanel gamePanel;
     //底部面板
-    private WindowRight windowRight;
+    private final WindowRight windowRight;
     //方块节点集合
     private List<TetrisNode> tetrisNodes;
     //下一个方块的节点集合
     private List<TetrisNode> futureNodes;
     //定时器
-    private Timer timer;
-    //定时器事件类
-    private TetrisMove tetrisMove;
+    private final Timer timer;
     //当前方块类型
     private Integer tetrisType;
     //下一个方块的类型
@@ -43,11 +41,14 @@ public class TetrisInit extends JFrame {
     //当前方块方向
     private Integer direction;
     //底部的沉积方块集合
-    private List<TetrisNode> deposition;
+    private final List<TetrisNode> deposition;
+    //音频
+    private final MusicPlay musicPlay;
+
     //是否开始游戏
     private boolean isStart;
 
-    public TetrisInit(){
+    public TetrisInit() {
         //初始化窗口
         super("俄罗斯方块");
         windowInit();
@@ -66,18 +67,23 @@ public class TetrisInit extends JFrame {
         add(windowRight);
 
         //创建定时器
-        tetrisMove = new TetrisMove(this);
+        //定时器事件类
+        TetrisMove tetrisMove = new TetrisMove(this);
         timer = new Timer(Constant.SPEED, tetrisMove);
+
+        //播放音乐
+        musicPlay = new MusicPlay();
 
         //显示窗口
         setVisible(true);
     }
 
+
     /**
      * 初始化窗口
      */
     private void windowInit() {
-        setSize(Constant.WINDOW_WIDTH,Constant.WINDOW_HEIGHT);   //设置窗口大小
+        setSize(Constant.WINDOW_WIDTH, Constant.WINDOW_HEIGHT);   //设置窗口大小
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  //设置点击右上角关闭按钮后程序会停止，不设置的话关闭了程序不会停止
         setLocationRelativeTo(null);                     //设置启动时默认位置为屏幕居中
         setResizable(false);                             //设置窗口不可变大或缩小
@@ -86,11 +92,11 @@ public class TetrisInit extends JFrame {
         BufferedImage read = null;
         try {
             URL url = this.getClass().getClassLoader().getResource(Constant.IMG_PATH);
-            if (url!=null) {
+            if (url != null) {
                 read = ImageIO.read(url);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         setIconImage(read);
 
@@ -109,28 +115,12 @@ public class TetrisInit extends JFrame {
         this.tetrisNodes = tetrisNodes;
     }
 
-    public void setTimer(Timer timer) {
-        this.timer = timer;
-    }
-
     public Timer getTimer() {
         return timer;
     }
 
-    public TetrisMove getTetrisMove() {
-        return tetrisMove;
-    }
-
-    public void setTetrisMove(TetrisMove tetrisMove) {
-        this.tetrisMove = tetrisMove;
-    }
-
     public List<TetrisNode> getDeposition() {
         return deposition;
-    }
-
-    public void setDeposition(List<TetrisNode> deposition) {
-        this.deposition = deposition;
     }
 
     public Integer getTetrisType() {
@@ -175,5 +165,9 @@ public class TetrisInit extends JFrame {
 
     public void setFutureNodes(List<TetrisNode> futureNodes) {
         this.futureNodes = futureNodes;
+    }
+
+    public MusicPlay getMusicPlay() {
+        return musicPlay;
     }
 }

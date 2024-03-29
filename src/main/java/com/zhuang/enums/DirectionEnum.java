@@ -3,7 +3,6 @@ package com.zhuang.enums;
 /**
  * 方向枚举
  *
- * @module
  * @author zxd
  * @date 2022/10/27  16:44
 **/

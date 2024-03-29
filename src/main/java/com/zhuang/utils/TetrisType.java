@@ -5,7 +5,6 @@ import com.zhuang.enums.TetrisTypeEnum;
 import com.zhuang.init.TetrisInit;
 import com.zhuang.tetris.TetrisNode;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -13,7 +12,6 @@ import java.util.Random;
 /**
  * 方块的7种类型生成工具类
  *
- * @module
  * @author zxd
  * @date 2022/10/25  10:10
 **/
@@ -47,7 +45,7 @@ public class TetrisType {
         if (type.equals(0)) {
             //每次循环绘制一格，向上循环4次
             for (int i = 0; i < 4; i++) {
-                tetrisNodes.add(new TetrisNode(210, 0 - i * 40, 39, 39, 0xA44AAC3A));
+                tetrisNodes.add(new TetrisNode(210, -i * 40, 39, 39, 0xA44AAC3A));
             }
         }else {
             for (int i = 0; i < 4; i++) {
@@ -107,7 +105,7 @@ public class TetrisType {
             for (int i = 0; i < 3; i++) {
                 tetrisNodes.add(new TetrisNode(210, i * 40 - 80, 39, 39, 0xA42EB8CB));
                 if (i == 2) {
-                    tetrisNodes.add(new TetrisNode(250, i * 40 - 80, 39, 39, 0xA42EB8CB));
+                    tetrisNodes.add(new TetrisNode(250, 0, 39, 39, 0xA42EB8CB));
                 }
             }
         }else {
@@ -131,7 +129,7 @@ public class TetrisType {
             for (int i = 0; i < 3; i++) {
                 tetrisNodes.add(new TetrisNode(210, i * 40 - 80, 39, 39, 0xA49517B6));
                 if (i == 2) {
-                    tetrisNodes.add(new TetrisNode(170, i * 40 - 80, 39, 39, 0xA49517B6));
+                    tetrisNodes.add(new TetrisNode(170, 0, 39, 39, 0xA49517B6));
                 }
             }
         }else {
@@ -182,7 +180,6 @@ public class TetrisType {
             tetrisInit.setTetrisNodes(generateBlocks(tetrisInit,0,random.nextInt(7)));
             //生成未来方块
             tetrisInit.setFutureNodes(generateBlocks(tetrisInit, 1, random.nextInt(7)));
-            return;
         }else {
             //如果游戏已经开始了，根据未来方块生成当前方块
             tetrisInit.setTetrisNodes(generateBlocks(tetrisInit,0,tetrisInit.getFutureType()));

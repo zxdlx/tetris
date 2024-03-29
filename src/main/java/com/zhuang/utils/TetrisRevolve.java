@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * 方块旋转工具类
  *
- * @module
  * @author zxd
  * @date 2022/10/31  16:03
 **/
@@ -23,7 +22,6 @@ public class TetrisRevolve {
      * @date 2022/10/27 16:37
      * @param tetrisNodes 方块集合
      * @param tetrisInit 初始化对象，用于获取类型和方向
-     * @return void
      */
     public static void revolve(List<TetrisNode> tetrisNodes, TetrisInit tetrisInit){
         //旋转后的方向

@@ -3,24 +3,20 @@ package com.zhuang.component;
 import com.zhuang.constant.Constant;
 import com.zhuang.enums.GameBtnEnum;
 import com.zhuang.init.TetrisInit;
-import com.zhuang.tetris.TetrisNode;
 import com.zhuang.utils.TetrisType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * 窗口右边组件
  *
- * @module
  * @author zxd
  * @date 2022/10/28  10:14
 **/
 public class WindowRight extends JPanel {
     //游戏初始化对象
-    private TetrisInit tetrisInit;
+    private final TetrisInit tetrisInit;
     //开始按钮
     private JButton button;
     //开始按钮文字
@@ -68,14 +64,7 @@ public class WindowRight extends JPanel {
 
         g.fillRect(0,200,Constant.WINDOW_WIDTH-Constant.GAME_WIDTH,10);
         //绘制未来方块
-        for (TetrisNode tetrisNode : tetrisInit.getFutureNodes()) {
-            g.setColor(new Color(tetrisNode.getColor(),true));
-            g.fillRect(tetrisNode.getX(),tetrisNode.getY(), 5,39);      //左边线
-            g.fillRect(tetrisNode.getX()+5,tetrisNode.getY(),29,5);     //顶线
-            g.fillRect(tetrisNode.getX()+34,tetrisNode.getY(),5,34);     //右边线
-            g.fillRect(tetrisNode.getX()+5,tetrisNode.getY()+34,34,5); //底线
-            g.fillRect(tetrisNode.getX()+10,tetrisNode.getY()+10,19,19);
-        }
+        GamePanel.drawBlocks(tetrisInit.getFutureNodes(), g);
 
         g.setColor(new Color(0xA4C0C5C7,true));
         g.fillRect(0,300,Constant.WINDOW_WIDTH-Constant.GAME_WIDTH,50);
@@ -93,30 +82,29 @@ public class WindowRight extends JPanel {
         button.setFont(new Font("宋体", Font.PLAIN, 16));       //设置按钮字体的格式
         button.setBackground(new Color(0xA4C0C5C7));                   //设置按钮颜色
         add(button);                                         //把按钮添加到面板中
-        button.addActionListener(new ActionListener() {                  //设置监听，当按钮被点击时就会执行此方法
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                //如果是点击的开始游戏，将isStart设置为true，并且启动定时器
-                if (beginBtn.equals(GameBtnEnum.BEGIN.getCode())) {
-                    tetrisInit.setIsStart(true);
-                    tetrisInit.getTimer().start();
-                    reBtn(GameBtnEnum.STOP.getCode());
-                    //同时渲染重新开始按钮
-                    setReStartBtn();
-                } else if (beginBtn.equals(GameBtnEnum.STOP.getCode())) {
-                    tetrisInit.getTimer().stop();
-                    tetrisInit.setIsStart(false);
-                    reBtn(GameBtnEnum.CONTINUE.getCode());
-                } else if (beginBtn.equals(GameBtnEnum.CONTINUE.getCode())) {
-                    tetrisInit.getTimer().start();
-                    tetrisInit.setIsStart(true);
-                    reBtn(GameBtnEnum.STOP.getCode());
-                }
-                tetrisInit.repaint();
-                //取消按钮的聚焦，否则键盘监听会失效
-                button.setFocusable(false);
+        //设置监听，当按钮被点击时就会执行此方法
+        button.addActionListener(e -> {
+            //播放点击音效
+            tetrisInit.getMusicPlay().clickSound();
+            //如果是点击的开始游戏，将isStart设置为true，并且启动定时器
+            if (beginBtn.equals(GameBtnEnum.BEGIN.getCode())) {
+                tetrisInit.setIsStart(true);
+                tetrisInit.getTimer().start();
+                reBtn(GameBtnEnum.STOP.getCode());
+                //同时渲染重新开始按钮
+                setReStartBtn();
+            } else if (beginBtn.equals(GameBtnEnum.STOP.getCode())) {
+                tetrisInit.getTimer().stop();
+                tetrisInit.setIsStart(false);
+                reBtn(GameBtnEnum.CONTINUE.getCode());
+            } else if (beginBtn.equals(GameBtnEnum.CONTINUE.getCode())) {
+                tetrisInit.getTimer().start();
+                tetrisInit.setIsStart(true);
+                reBtn(GameBtnEnum.STOP.getCode());
             }
+            tetrisInit.repaint();
+            //取消按钮的聚焦，否则键盘监听会失效
+            button.setFocusable(false);
         });
     }
 
@@ -130,25 +118,24 @@ public class WindowRight extends JPanel {
         reButton.setFont(new Font("宋体", Font.PLAIN, 16));       //设置按钮字体的格式
         reButton.setBackground(new Color(0xA4C0C5C7));                   //设置按钮颜色
         add(reButton);                                         //把按钮添加到面板中
-        reButton.addActionListener(new ActionListener() {                  //设置监听，当按钮被点击时就会执行此方法
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //设置游戏未开始
-                tetrisInit.setIsStart(false);
-                //初始化下坠方块和沉积方块
-                tetrisInit.getTetrisNodes().clear();
-                tetrisInit.getDeposition().clear();
-                //重新设置分数、等级、消除行数
-                reLabel();
-                tetrisInit.getGamePanel().setFail(false);
-                TetrisType.randomBlock(tetrisInit);
-                tetrisInit.getTimer().setDelay(Constant.SPEED);
-                //设置游戏开始
-                tetrisInit.setIsStart(true);
-                tetrisInit.repaint();
-                //取消按钮的聚焦，否则键盘监听会失效
-                reButton.setFocusable(false);
-            }
+        //设置监听，当按钮被点击时就会执行此方法
+        reButton.addActionListener(e -> {
+            tetrisInit.getMusicPlay().clickSound();
+            //设置游戏未开始
+            tetrisInit.setIsStart(false);
+            //初始化下坠方块和沉积方块
+            tetrisInit.getTetrisNodes().clear();
+            tetrisInit.getDeposition().clear();
+            //重新设置分数、等级、消除行数
+            reLabel();
+            tetrisInit.getGamePanel().setFail(false);
+            TetrisType.randomBlock(tetrisInit);
+            tetrisInit.getTimer().setDelay(Constant.SPEED);
+            //设置游戏开始
+            tetrisInit.setIsStart(true);
+            tetrisInit.repaint();
+            //取消按钮的聚焦，否则键盘监听会失效
+            reButton.setFocusable(false);
         });
     }
 
@@ -285,10 +272,6 @@ public class WindowRight extends JPanel {
 
     public int getLevel() {
         return level;
-    }
-
-    public int getClearLine() {
-        return clearLine;
     }
 }
 
